@@ -11,17 +11,35 @@ var getUserRepos = function(user) {
     // format the github api url
     var apiUrl = "https://api.github.com/users/" + user + "/repos";
 
-    // make a request to the url (then is asynchronous)
-    fetch(apiUrl).then(function(response) {
-        response.json().then(function(data) {
+    // make a request to the url (`then()` is asynchronous)
+    fetch(apiUrl)
+    // request was successful
+    .then(function(response) {
+        if (response.ok) {
+            response.json().then(function(data) {
             // call displayRepos with `data` being the returned JSON...
             // and `user` being the name searched as it's parameters
             displayRepos(data, user);
-        });
+            });
+        } else {
+            alert("Error: " + response.statusText);
+        };
+    })
+
+    // request failed
+    .catch(function(error) {
+        // Notice this `.catch()` getting chained onto the end of the `.then()` method
+        alert("Unable to connect to GitHub");
     });
 };
 
 var displayRepos = function(repos, searchTerm) {
+    // check if api returned any repos
+    if (repos.length === 0) {
+        repoContainerEl.textContent = "No repositories found.";
+        return;
+    };
+
     // clears the repoContainerEl
     repoContainerEl.textContent = "";
     // sets the span element in the HTML to equal whatever name was input in the form
