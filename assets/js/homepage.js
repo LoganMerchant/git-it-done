@@ -1,7 +1,11 @@
-// select any element with an id of `user-form`
+// select the element with an id of `user-form`
 var userFormEl = document.querySelector("#user-form");
-// select any element with an id of `username`
+// select the element with an id of `username`
 var nameInputEl = document.querySelector("#username");
+// select the element with an id of `repos-container`
+var repoContainerEl = document.querySelector("#repos-container");
+// select the element with an id of `repo-search-term`
+var repoSearchTerm = document.querySelector("#repo-search-term");
 
 var getUserRepos = function(user) {
     // format the github api url
@@ -10,9 +14,53 @@ var getUserRepos = function(user) {
     // make a request to the url (then is asynchronous)
     fetch(apiUrl).then(function(response) {
         response.json().then(function(data) {
-            console.log(data);
+            // call displayRepos with `data` being the returned JSON...
+            // and `user` being the name searched as it's parameters
+            displayRepos(data, user);
         });
     });
+};
+
+var displayRepos = function(repos, searchTerm) {
+    // clears the repoContainerEl
+    repoContainerEl.textContent = "";
+    // sets the span element in the HTML to equal whatever name was input in the form
+    repoSearchTerm.textContent = searchTerm;
+
+    // loop over repos
+    for (var i = 0; i < repos.length; i++) {
+        // format repo name as <repoowner>/<reponame>
+        var repoName = repos[i].owner.login + "/" + repos[i].name;
+
+        // create a container for each repo and declare all of it's classes
+        var repoEl = document.createElement("div");
+        repoEl.classList = "list-item flex-row justify-space-between align-center";
+
+        // create a span element to hold repository name (<repoowner>/<reponame>)
+        var titleEl = document.createElement("span");
+        titleEl.textContent = repoName;
+
+        // append title to container
+        repoEl.appendChild(titleEl);
+
+        // create a status element
+        var statusEl = document.createElement("span");
+        statusEl.classList = "flex-row align-center";
+
+        // check if current repo has issues or not
+        if (repos[i].open_issues_count > 0) {
+            statusEl.innerHTML = 
+            "<i class='fas fa-times status-icon icon-danger'></i>" + repos[i].open_issues_count + " issue(s)";
+        } else {
+            statusEl.innerHTML = "<i class='fas fa-check-square status-icon icon-success'></i>";
+        };
+
+        // append status to container
+        repoEl.appendChild(statusEl);
+
+        // append container to the DOM
+        repoContainerEl.appendChild(repoEl);
+    };
 };
 
 var formSubmitHandler = function(event) {
