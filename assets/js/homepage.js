@@ -6,6 +6,8 @@ var nameInputEl = document.querySelector("#username");
 var repoContainerEl = document.querySelector("#repos-container");
 // select the element with an id of `repo-search-term`
 var repoSearchTerm = document.querySelector("#repo-search-term");
+// select the element with an id of `language-container`
+var languageButtonsEl = document.querySelector("#language-container");
 
 var getFeaturedRepos = function(language) {
     // add the endpoint to search for featured, selected languages
@@ -120,5 +122,20 @@ var formSubmitHandler = function(event) {
     };
 };
 
+var buttonClickHandler = function(event) {
+    // get the data-language attribute of the button clicked.
+    var language = event.target.getAttribute("data-language");
+
+    // if there is a valid language clicked,
+    if (language) {
+        // sent it to the getFeaturedRepos function
+        getFeaturedRepos(language);
+        // clear the old content
+        repoContainerEl.textContent = "";
+    };
+};
+
 // when the userFormEl is submitted, perform the `formSubmitHandler` function.
 userFormEl.addEventListener("submit", formSubmitHandler);
+// when the languageButtonsEl is clicked, perform the `buttonClickHandler` function
+languageButtonsEl.addEventListener("click", buttonClickHandler);
