@@ -1,5 +1,18 @@
 var issuesContainerEl = document.querySelector("#issues-container");
 var limitWarningEl = document.querySelector("#limit-warning");
+var repoNameEl = document.querySelector("#repo-name");
+
+var getRepoName = function() {
+    // search the url for it's `search` property
+    var queryString = document.location.search
+    // split `queryString` at the =, and use index 1
+    var repoName = queryString.split("=")[1];
+
+    // use `repoName` to display the repo's name in the header
+    repoNameEl.textContent = repoName;
+    // pass `repoName` to getRepoIssues();
+    getRepoIssues(repoName);
+};
 
 var getRepoIssues = function(repo) {
     // format the api request
@@ -80,4 +93,4 @@ var displayWarning = function(repo) {
     limitWarningEl.appendChild(linkEl);
 };
 
-getRepoIssues('angular/angular');
+getRepoName();
