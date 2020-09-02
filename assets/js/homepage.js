@@ -8,9 +8,22 @@ var repoContainerEl = document.querySelector("#repos-container");
 var repoSearchTerm = document.querySelector("#repo-search-term");
 
 var getFeaturedRepos = function(language) {
+    // add the endpoint to search for featured, selected languages
     var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
     
-    fetch(apiUrl);
+    // conditionals for how the response is handled
+    fetch(apiUrl).then(function(response) {
+        if (response.ok) {
+            // format the response in JSON
+            response.json().then(function(data) {
+                console.log(data);
+                // pass the `items` stored in the data and the selected language to displayRepos()
+                displayRepos(data.items, language)
+            });
+        } else {
+            alert("Error: " + response.statusText);
+        }
+    });
 };
 
 var getUserRepos = function(user) {
