@@ -1,4 +1,5 @@
 var issuesContainerEl = document.querySelector("#issues-container");
+var limitWarningEl = document.querySelector("#limit-warning");
 
 var getRepoIssues = function(repo) {
     // format the api request
@@ -12,6 +13,11 @@ var getRepoIssues = function(repo) {
             response.json().then(function(data) {
                 // pass the data to the displayIssues function
                 displayIssues(data);
+
+                // check if api has paginated issues
+                if (response.headers.get("Link")) {
+                    displayWarning(repo);
+                };
             });
         // if the server request fails...
         } else {
@@ -62,4 +68,16 @@ var displayIssues = function(issues) {
     };
 };
 
-getRepoIssues('loganmerchant/code-quiz');
+var displayWarning = function(repo) {
+    limitWarningEl.textContent = "To see more than 30 issues, visit ";
+
+    // create a link to the issues page of the given repo
+    linkEl = document.createElement("a");
+    linkEl.textContent = "See More Issues on GitHub.com";
+    linkEl.setAttribute("href", "https://github.com/" + repo + "/issues");
+    linkEl.setAttribute("target", "_blank");
+
+    limitWarningEl.appendChild(linkEl);
+};
+
+getRepoIssues('angular/angular');
