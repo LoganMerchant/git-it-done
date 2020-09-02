@@ -7,6 +7,12 @@ var repoContainerEl = document.querySelector("#repos-container");
 // select the element with an id of `repo-search-term`
 var repoSearchTerm = document.querySelector("#repo-search-term");
 
+var getFeaturedRepos = function(language) {
+    var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
+    
+    fetch(apiUrl);
+};
+
 var getUserRepos = function(user) {
     // format the github api url
     var apiUrl = "https://api.github.com/users/" + user + "/repos";
