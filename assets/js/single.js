@@ -8,10 +8,15 @@ var getRepoName = function() {
     // split `queryString` at the =, and use index 1
     var repoName = queryString.split("=")[1];
 
-    // use `repoName` to display the repo's name in the header
-    repoNameEl.textContent = repoName;
-    // pass `repoName` to getRepoIssues();
-    getRepoIssues(repoName);
+    // if no queryString is available, redirect to the homepage
+    if (!queryString) {
+        document.location.replace('./index.html');
+    } else {
+        // use `repoName` to display the repo's name in the header
+        repoNameEl.textContent = repoName;
+        // pass `repoName` to getRepoIssues();
+        getRepoIssues(repoName);
+    };
 };
 
 var getRepoIssues = function(repo) {
@@ -34,9 +39,9 @@ var getRepoIssues = function(repo) {
             });
         // if the server request fails...
         } else {
-            // alert the user
-            alert("There was a problem with your request!");
-            };
+            // redirect the user back to the homepage
+            document.location.replace('./index.html');
+        };
     });
 };
 
